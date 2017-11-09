@@ -12,6 +12,10 @@
   },
   "author": "luboid",
   "license": "MIT",
+  "repository" : { 
+	"type" : "git", 
+	"url" : "https://github.com/luboid/rxjs-amd-bundler.git"
+  },
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-plumber": "^1.1.0",
