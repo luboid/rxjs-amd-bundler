@@ -2,15 +2,16 @@
   "name": "rxjs-amd-bundler",
   "version": "1.0.0",
   "description": "Utility to build RxJS amd bundel",
-  "main": "index.js",
+  "main": "gulpfile.js",
   "scripts": {
     "minify": "node_modules/.bin/gulp minify",
     "bundle": "node_modules/.bin/gulp bundle",
     "bundle-only": "node_modules/.bin/gulp bundle-only",
+    "minify-only": "node_modules/.bin/gulp minify-only",
     "clear": "node_modules/.bin/gulp clear"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "luboid",
+  "license": "MIT",
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-plumber": "^1.1.0",
