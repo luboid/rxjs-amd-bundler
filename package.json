@@ -1,0 +1,29 @@
+{
+  "name": "rxjs-amd-bundler",
+  "version": "1.0.0",
+  "description": "Utility to build RxJS amd bundel",
+  "main": "index.js",
+  "scripts": {
+    "minify": "node_modules/.bin/gulp minify",
+    "bundle": "node_modules/.bin/gulp bundle",
+    "bundle-only": "node_modules/.bin/gulp bundle-only",
+    "clear": "node_modules/.bin/gulp clear"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-plumber": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-requirejs": "^1.0.0",
+    "gulp-requirejs-optimize": "^1.2.0",
+    "gulp-sourcemaps": "^2.6.1",
+    "gulp-typescript": "^3.2.3",
+    "gulp-uglify": "^3.0.0",
+    "merge2": "^1.2.0",
+    "rimraf": "^2.6.2",
+    "rxjs": "^5.5.2",
+    "tslib": "^1.8.0",
+    "typescript": "^2.6.1"
+  }
+}
