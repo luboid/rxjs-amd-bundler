@@ -45,7 +45,7 @@ gulp.task("compile", ["clear"], function() {
 const bundle = () => {
   const rjs = require("gulp-requirejs");
   return rjs({
-    //logLevel: 2,
+    logLevel: 2,
     //preserveLicenseComments: false,
     optimize: "none", //"uglify",
     generateSourceMaps: true,
@@ -53,13 +53,13 @@ const bundle = () => {
     baseUrl: distJs,
     include: ["rxjs/Rx"],
     out: rxJsName,
-    packages: [
-      {
-        name: "rxjs/operators",
-        location: "rxjs/operators/",
-        main: "index.js"
-      }
-    ],
+    //packages: [
+    //  {
+    //    name: "rxjs/operators",
+    //    location: "rxjs/operators/",
+    //    main: "index.js"
+    //  }
+    //],
     paths: {
       tslib: "empty:"
     },
@@ -80,7 +80,7 @@ const minify = () => {
     .src(dist + "/" + rxJsName)
     .pipe(sourcemaps.init())
     .pipe(plumber())
-    .pipe(gulp.dest(dist)) 
+    .pipe(gulp.dest(dist))
     .pipe(uglify())
     .pipe(rename({ extname: ".min.js" }))
     .pipe(sourcemaps.write("./"))

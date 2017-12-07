@@ -6516,9 +6516,10 @@ define('rxjs/observable/concat',["require", "exports", "../util/isScheduler", ".
     exports.concat = concat;
 });
 
-define('rxjs/operators/concat',["require", "exports", "../observable/concat"], function (require, exports, concat_1) {
+define('rxjs/operators/concat',["require", "exports", "../observable/concat", "../observable/concat"], function (require, exports, concat_1, concat_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.concatStatic = concat_2.concat;
     /* tslint:enable:max-line-length */
     /**
      * Creates an output Observable which sequentially emits all values from every
@@ -9856,18 +9857,9 @@ define('rxjs/operators/max',["require", "exports", "./reduce"], function (requir
     exports.max = max;
 });
 
-define('rxjs/operators/merge',["require", "exports", "../Observable", "../observable/ArrayObservable", "./mergeAll", "../util/isScheduler"], function (require, exports, Observable_1, ArrayObservable_1, mergeAll_1, isScheduler_1) {
+define('rxjs/observable/merge',["require", "exports", "../Observable", "./ArrayObservable", "../util/isScheduler", "../operators/mergeAll"], function (require, exports, Observable_1, ArrayObservable_1, isScheduler_1, mergeAll_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    /* tslint:enable:max-line-length */
-    function merge() {
-        var observables = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            observables[_i] = arguments[_i];
-        }
-        return function (source) { return source.lift.call(mergeStatic.apply(void 0, [source].concat(observables))); };
-    }
-    exports.merge = merge;
     /* tslint:enable:max-line-length */
     /**
      * Creates an output Observable which concurrently emits all values from every
@@ -9929,7 +9921,7 @@ define('rxjs/operators/merge',["require", "exports", "../Observable", "../observ
      * @name merge
      * @owner Observable
      */
-    function mergeStatic() {
+    function merge() {
         var observables = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             observables[_i] = arguments[_i];
@@ -9951,7 +9943,68 @@ define('rxjs/operators/merge',["require", "exports", "../Observable", "../observ
         }
         return mergeAll_1.mergeAll(concurrent)(new ArrayObservable_1.ArrayObservable(observables, scheduler));
     }
-    exports.mergeStatic = mergeStatic;
+    exports.merge = merge;
+});
+
+define('rxjs/operators/merge',["require", "exports", "../observable/merge", "../observable/merge"], function (require, exports, merge_1, merge_2) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.mergeStatic = merge_2.merge;
+    /* tslint:enable:max-line-length */
+    /**
+     * Creates an output Observable which concurrently emits all values from every
+     * given input Observable.
+     *
+     * <span class="informal">Flattens multiple Observables together by blending
+     * their values into one Observable.</span>
+     *
+     * <img src="./img/merge.png" width="100%">
+     *
+     * `merge` subscribes to each given input Observable (either the source or an
+     * Observable given as argument), and simply forwards (without doing any
+     * transformation) all the values from all the input Observables to the output
+     * Observable. The output Observable only completes once all input Observables
+     * have completed. Any error delivered by an input Observable will be immediately
+     * emitted on the output Observable.
+     *
+     * @example <caption>Merge together two Observables: 1s interval and clicks</caption>
+     * var clicks = Rx.Observable.fromEvent(document, 'click');
+     * var timer = Rx.Observable.interval(1000);
+     * var clicksOrTimer = clicks.merge(timer);
+     * clicksOrTimer.subscribe(x => console.log(x));
+     *
+     * @example <caption>Merge together 3 Observables, but only 2 run concurrently</caption>
+     * var timer1 = Rx.Observable.interval(1000).take(10);
+     * var timer2 = Rx.Observable.interval(2000).take(6);
+     * var timer3 = Rx.Observable.interval(500).take(10);
+     * var concurrent = 2; // the argument
+     * var merged = timer1.merge(timer2, timer3, concurrent);
+     * merged.subscribe(x => console.log(x));
+     *
+     * @see {@link mergeAll}
+     * @see {@link mergeMap}
+     * @see {@link mergeMapTo}
+     * @see {@link mergeScan}
+     *
+     * @param {ObservableInput} other An input Observable to merge with the source
+     * Observable. More than one input Observables may be given as argument.
+     * @param {number} [concurrent=Number.POSITIVE_INFINITY] Maximum number of input
+     * Observables being subscribed to concurrently.
+     * @param {Scheduler} [scheduler=null] The IScheduler to use for managing
+     * concurrency of input Observables.
+     * @return {Observable} An Observable that emits items that are the result of
+     * every input Observable.
+     * @method merge
+     * @owner Observable
+     */
+    function merge() {
+        var observables = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            observables[_i] = arguments[_i];
+        }
+        return function (source) { return source.lift.call(merge_1.merge.apply(void 0, [source].concat(observables))); };
+    }
+    exports.merge = merge;
 });
 
 define('rxjs/operators/mergeMapTo',["require", "exports", "tslib", "../OuterSubscriber", "../util/subscribeToResult"], function (require, exports, tslib_1, OuterSubscriber_1, subscribeToResult_1) {
@@ -14244,7 +14297,7 @@ define('rxjs/operators/zipAll',["require", "exports", "./zip"], function (requir
     exports.zipAll = zipAll;
 });
 
-define('rxjs/operators/index',["require", "exports", "./audit", "./auditTime", "./buffer", "./bufferCount", "./bufferTime", "./bufferToggle", "./bufferWhen", "./catchError", "./combineAll", "./combineLatest", "./concat", "./concatAll", "./concatMap", "./concatMapTo", "./count", "./debounce", "./debounceTime", "./defaultIfEmpty", "./delay", "./delayWhen", "./dematerialize", "./distinct", "./distinctUntilChanged", "./distinctUntilKeyChanged", "./elementAt", "./every", "./exhaust", "./exhaustMap", "./expand", "./filter", "./finalize", "./find", "./findIndex", "./first", "./groupBy", "./ignoreElements", "./isEmpty", "./last", "./map", "./mapTo", "./materialize", "./max", "./merge", "./mergeAll", "./mergeMap", "./mergeMap", "./mergeMapTo", "./mergeScan", "./min", "./multicast", "./observeOn", "./onErrorResumeNext", "./pairwise", "./partition", "./pluck", "./publish", "./publishBehavior", "./publishLast", "./publishReplay", "./race", "./reduce", "./repeat", "./repeatWhen", "./retry", "./retryWhen", "./refCount", "./sample", "./sampleTime", "./scan", "./sequenceEqual", "./share", "./shareReplay", "./single", "./skip", "./skipLast", "./skipUntil", "./skipWhile", "./startWith", "./switchAll", "./switchMap", "./switchMapTo", "./take", "./takeLast", "./takeUntil", "./takeWhile", "./tap", "./throttle", "./throttleTime", "./timeInterval", "./timeout", "./timeoutWith", "./timestamp", "./toArray", "./window", "./windowCount", "./windowTime", "./windowToggle", "./windowWhen", "./withLatestFrom", "./zip", "./zipAll"], function (require, exports, audit_1, auditTime_1, buffer_1, bufferCount_1, bufferTime_1, bufferToggle_1, bufferWhen_1, catchError_1, combineAll_1, combineLatest_1, concat_1, concatAll_1, concatMap_1, concatMapTo_1, count_1, debounce_1, debounceTime_1, defaultIfEmpty_1, delay_1, delayWhen_1, dematerialize_1, distinct_1, distinctUntilChanged_1, distinctUntilKeyChanged_1, elementAt_1, every_1, exhaust_1, exhaustMap_1, expand_1, filter_1, finalize_1, find_1, findIndex_1, first_1, groupBy_1, ignoreElements_1, isEmpty_1, last_1, map_1, mapTo_1, materialize_1, max_1, merge_1, mergeAll_1, mergeMap_1, mergeMap_2, mergeMapTo_1, mergeScan_1, min_1, multicast_1, observeOn_1, onErrorResumeNext_1, pairwise_1, partition_1, pluck_1, publish_1, publishBehavior_1, publishLast_1, publishReplay_1, race_1, reduce_1, repeat_1, repeatWhen_1, retry_1, retryWhen_1, refCount_1, sample_1, sampleTime_1, scan_1, sequenceEqual_1, share_1, shareReplay_1, single_1, skip_1, skipLast_1, skipUntil_1, skipWhile_1, startWith_1, switchAll_1, switchMap_1, switchMapTo_1, take_1, takeLast_1, takeUntil_1, takeWhile_1, tap_1, throttle_1, throttleTime_1, timeInterval_1, timeout_1, timeoutWith_1, timestamp_1, toArray_1, window_1, windowCount_1, windowTime_1, windowToggle_1, windowWhen_1, withLatestFrom_1, zip_1, zipAll_1) {
+define('rxjs/operators',["require", "exports", "./operators/audit", "./operators/auditTime", "./operators/buffer", "./operators/bufferCount", "./operators/bufferTime", "./operators/bufferToggle", "./operators/bufferWhen", "./operators/catchError", "./operators/combineAll", "./operators/combineLatest", "./operators/concat", "./operators/concatAll", "./operators/concatMap", "./operators/concatMapTo", "./operators/count", "./operators/debounce", "./operators/debounceTime", "./operators/defaultIfEmpty", "./operators/delay", "./operators/delayWhen", "./operators/dematerialize", "./operators/distinct", "./operators/distinctUntilChanged", "./operators/distinctUntilKeyChanged", "./operators/elementAt", "./operators/every", "./operators/exhaust", "./operators/exhaustMap", "./operators/expand", "./operators/filter", "./operators/finalize", "./operators/find", "./operators/findIndex", "./operators/first", "./operators/groupBy", "./operators/ignoreElements", "./operators/isEmpty", "./operators/last", "./operators/map", "./operators/mapTo", "./operators/materialize", "./operators/max", "./operators/merge", "./operators/mergeAll", "./operators/mergeMap", "./operators/mergeMap", "./operators/mergeMapTo", "./operators/mergeScan", "./operators/min", "./operators/multicast", "./operators/observeOn", "./operators/onErrorResumeNext", "./operators/pairwise", "./operators/partition", "./operators/pluck", "./operators/publish", "./operators/publishBehavior", "./operators/publishLast", "./operators/publishReplay", "./operators/race", "./operators/reduce", "./operators/repeat", "./operators/repeatWhen", "./operators/retry", "./operators/retryWhen", "./operators/refCount", "./operators/sample", "./operators/sampleTime", "./operators/scan", "./operators/sequenceEqual", "./operators/share", "./operators/shareReplay", "./operators/single", "./operators/skip", "./operators/skipLast", "./operators/skipUntil", "./operators/skipWhile", "./operators/startWith", "./operators/switchAll", "./operators/switchMap", "./operators/switchMapTo", "./operators/take", "./operators/takeLast", "./operators/takeUntil", "./operators/takeWhile", "./operators/tap", "./operators/throttle", "./operators/throttleTime", "./operators/timeInterval", "./operators/timeout", "./operators/timeoutWith", "./operators/timestamp", "./operators/toArray", "./operators/window", "./operators/windowCount", "./operators/windowTime", "./operators/windowToggle", "./operators/windowWhen", "./operators/withLatestFrom", "./operators/zip", "./operators/zipAll"], function (require, exports, audit_1, auditTime_1, buffer_1, bufferCount_1, bufferTime_1, bufferToggle_1, bufferWhen_1, catchError_1, combineAll_1, combineLatest_1, concat_1, concatAll_1, concatMap_1, concatMapTo_1, count_1, debounce_1, debounceTime_1, defaultIfEmpty_1, delay_1, delayWhen_1, dematerialize_1, distinct_1, distinctUntilChanged_1, distinctUntilKeyChanged_1, elementAt_1, every_1, exhaust_1, exhaustMap_1, expand_1, filter_1, finalize_1, find_1, findIndex_1, first_1, groupBy_1, ignoreElements_1, isEmpty_1, last_1, map_1, mapTo_1, materialize_1, max_1, merge_1, mergeAll_1, mergeMap_1, mergeMap_2, mergeMapTo_1, mergeScan_1, min_1, multicast_1, observeOn_1, onErrorResumeNext_1, pairwise_1, partition_1, pluck_1, publish_1, publishBehavior_1, publishLast_1, publishReplay_1, race_1, reduce_1, repeat_1, repeatWhen_1, retry_1, retryWhen_1, refCount_1, sample_1, sampleTime_1, scan_1, sequenceEqual_1, share_1, shareReplay_1, single_1, skip_1, skipLast_1, skipUntil_1, skipWhile_1, startWith_1, switchAll_1, switchMap_1, switchMapTo_1, take_1, takeLast_1, takeUntil_1, takeWhile_1, tap_1, throttle_1, throttleTime_1, timeInterval_1, timeout_1, timeoutWith_1, timestamp_1, toArray_1, window_1, windowCount_1, windowTime_1, windowToggle_1, windowWhen_1, withLatestFrom_1, zip_1, zipAll_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.audit = audit_1.audit;
@@ -14350,8 +14403,6 @@ define('rxjs/operators/index',["require", "exports", "./audit", "./auditTime", "
     exports.zipAll = zipAll_1.zipAll;
 });
 
-define('rxjs/operators', ['rxjs/operators/index'], function (main) { return main; });
-
 define('rxjs/observable/BoundCallbackObservable',["require", "exports", "tslib", "../Observable", "../util/tryCatch", "../util/errorObject", "../AsyncSubject"], function (require, exports, tslib_1, Observable_1, tryCatch_1, errorObject_1, AsyncSubject_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -14380,62 +14431,58 @@ define('rxjs/observable/BoundCallbackObservable',["require", "exports", "tslib",
          * Observable.</span>
          *
          * `bindCallback` is not an operator because its input and output are not
-         * Observables. The input is a function `func` with some parameters, but the
+         * Observables. The input is a function `func` with some parameters, the
          * last parameter must be a callback function that `func` calls when it is
          * done.
          *
          * The output of `bindCallback` is a function that takes the same parameters
          * as `func`, except the last one (the callback). When the output function
-         * is called with arguments, it will return an Observable. If `func` function
-         * calls its callback with one argument, the Observable will emit that value.
-         * If on the other hand callback is called with multiple values, resulting
-         * Observable will emit an array with these arguments.
+         * is called with arguments it will return an Observable. If function `func`
+         * calls its callback with one argument the Observable will emit that value.
+         * If on the other hand the callback is called with multiple values the resulting
+         * Observable will emit an array with said values as arguments.
          *
-         * It is very important to remember, that input function `func` is not called
-         * when output function is, but rather when Observable returned by output
-         * function is subscribed. This means if `func` makes AJAX request, that request
-         * will be made every time someone subscribes to resulting Observable, but not before.
+         * It is very important to remember that input function `func` is not called
+         * when the output function is, but rather when the Observable returned by the output
+         * function is subscribed. This means if `func` makes an AJAX request, that request
+         * will be made every time someone subscribes to the resulting Observable, but not before.
          *
-         * Optionally, selector function can be passed to `bindObservable`. That function
-         * takes the same arguments as callback, and returns value
-         * that will be emitted by Observable instead of callback parameters themselves.
-         * Even though by default multiple arguments passed to callback appear in the stream as array,
-         * selector function will be called with arguments directly, just as callback would.
-         * This means you can imagine default selector (when one is not provided explicitly)
-         * as function that aggregates all its arguments into array, or simply returns first argument,
+         * Optionally, a selector function can be passed to `bindObservable`. The selector function
+         * takes the same arguments as the callback and returns the value that will be emitted by the Observable.
+         * Even though by default multiple arguments passed to callback appear in the stream as an array
+         * the selector function will be called with arguments directly, just as the callback would.
+         * This means you can imagine the default selector (when one is not provided explicitly)
+         * as a function that aggregates all its arguments into an array, or simply returns first argument
          * if there is only one.
          *
-         * Last optional parameter - {@link Scheduler} - can be used to control when call
+         * The last optional parameter - {@link Scheduler} - can be used to control when the call
          * to `func` happens after someone subscribes to Observable, as well as when results
-         * passed to callback will be emitted. By default subscription to Observable calls `func`
-         * synchronously, but using `Scheduler.async` as last parameter will defer call to input function,
-         * just like wrapping that call in `setTimeout` with time `0` would. So if you use async Scheduler
-         * and call `subscribe` on output Observable, all function calls that are currently executing,
+         * passed to callback will be emitted. By default, the subscription to  an Observable calls `func`
+         * synchronously, but using `Scheduler.async` as the last parameter will defer the call to `func`,
+         * just like wrapping the call in `setTimeout` with a timeout of `0` would. If you use the async Scheduler
+         * and call `subscribe` on the output Observable all function calls that are currently executing
          * will end before `func` is invoked.
          *
-         * When it comes to emitting results passed to callback, by default they are emitted
-         * immediately after `func` invokes callback. In particular, if callback is called synchronously,
-         * then subscription to resulting Observable will call `next` function synchronously as well.
-         * If you want to defer that call, using `Scheduler.async` will, again, do the job.
-         * This means that by using `Scheduler.async` you can, in a sense, ensure that `func`
-         * always calls its callback asynchronously, thus avoiding terrifying Zalgo.
+         * By default results passed to the callback are emitted immediately after `func` invokes the callback.
+         * In particular, if the callback is called synchronously the subscription of the resulting Observable
+         * will call the `next` function synchronously as well.  If you want to defer that call,
+         * you may use `Scheduler.async` just as before.  This means that by using `Scheduler.async` you can
+         * ensure that `func` always calls its callback asynchronously, thus avoiding terrifying Zalgo.
          *
-         * Note that Observable created by output function will always emit only one value
-         * and then complete right after. Even if `func` calls callback multiple times, values from
-         * second and following calls will never appear in the stream. If you need to
-         * listen for multiple calls, you probably want to use {@link fromEvent} or
-         * {@link fromEventPattern} instead.
+         * Note that the Observable created by the output function will always emit a single value
+         * and then complete immediately. If `func` calls the callback multiple times, values from subsequent
+         * calls will not appear in the stream. If you need to listen for multiple calls,
+         *  you probably want to use {@link fromEvent} or {@link fromEventPattern} instead.
          *
-         * If `func` depends on some context (`this` property), that context will be set
-         * to the same context that output function has at call time. In particular, if `func`
-         * is called as method of some object, in order to preserve proper behaviour,
-         * it is recommended to set context of output function to that object as well,
-         * provided `func` is not already bound.
+         * If `func` depends on some context (`this` property) and is not already bound the context of `func`
+         * will be the context that the output function has at call time. In particular, if `func`
+         * is called as a method of some objec and if `func` is not already bound, in order to preserve the context
+         * it is recommended that the context of the output function is set to that object as well.
          *
-         * If input function calls its callback in "node style" (i.e. first argument to callback is
-         * optional error parameter signaling whether call failed or not), {@link bindNodeCallback}
+         * If the input function calls its callback in the "node style" (i.e. first argument to callback is
+         * optional error parameter signaling whether the call failed or not), {@link bindNodeCallback}
          * provides convenient error handling and probably is a better choice.
-         * `bindCallback` will treat such functions without any difference and error parameter
+         * `bindCallback` will treat such functions the same as any other and error parameters
          * (whether passed or not) will always be interpreted as regular callback argument.
          *
          *
@@ -14446,7 +14493,7 @@ define('rxjs/observable/BoundCallbackObservable',["require", "exports", "tslib",
          * result.subscribe(x => console.log(x), e => console.error(e));
          *
          *
-         * @example <caption>Receive array of arguments passed to callback</caption>
+         * @example <caption>Receive an array of arguments passed to a callback</caption>
          * someFunction((a, b, c) => {
          *   console.log(a); // 5
          *   console.log(b); // 'some string'
@@ -14459,7 +14506,7 @@ define('rxjs/observable/BoundCallbackObservable',["require", "exports", "tslib",
          * });
          *
          *
-         * @example <caption>Use bindCallback with selector function</caption>
+         * @example <caption>Use bindCallback with a selector function</caption>
          * someFunction((a, b, c) => {
          *   console.log(a); // 'a'
          *   console.log(b); // 'b'
@@ -14490,7 +14537,7 @@ define('rxjs/observable/BoundCallbackObservable',["require", "exports", "tslib",
          * // I was async!
          *
          *
-         * @example <caption>Use bindCallback on object method</caption>
+         * @example <caption>Use bindCallback on an object method</caption>
          * const boundMethod = Rx.Observable.bindCallback(someObject.methodWithCallback);
          * boundMethod.call(someObject) // make sure methodWithCallback has access to someObject
          * .subscribe(subscriber);
@@ -14500,9 +14547,9 @@ define('rxjs/observable/BoundCallbackObservable',["require", "exports", "tslib",
          * @see {@link from}
          * @see {@link fromPromise}
          *
-         * @param {function} func Function with a callback as the last parameter.
+         * @param {function} func A function with a callback as the last parameter.
          * @param {function} [selector] A function which takes the arguments from the
-         * callback and maps those to a value to emit on the output Observable.
+         * callback and maps them to a value that is emitted on the output Observable.
          * @param {Scheduler} [scheduler] The scheduler on which to schedule the
          * callbacks.
          * @return {function(...params: *): Observable} A function which returns the
@@ -16045,73 +16092,6 @@ define('rxjs/add/observable/interval',["require", "exports", "../../Observable",
     Observable_1.Observable.interval = interval_1.interval;
 });
 
-define('rxjs/operator/merge',["require", "exports", "../operators/merge", "../operators/merge"], function (require, exports, merge_1, merge_2) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.mergeStatic = merge_2.mergeStatic;
-    /* tslint:enable:max-line-length */
-    /**
-     * Creates an output Observable which concurrently emits all values from every
-     * given input Observable.
-     *
-     * <span class="informal">Flattens multiple Observables together by blending
-     * their values into one Observable.</span>
-     *
-     * <img src="./img/merge.png" width="100%">
-     *
-     * `merge` subscribes to each given input Observable (either the source or an
-     * Observable given as argument), and simply forwards (without doing any
-     * transformation) all the values from all the input Observables to the output
-     * Observable. The output Observable only completes once all input Observables
-     * have completed. Any error delivered by an input Observable will be immediately
-     * emitted on the output Observable.
-     *
-     * @example <caption>Merge together two Observables: 1s interval and clicks</caption>
-     * var clicks = Rx.Observable.fromEvent(document, 'click');
-     * var timer = Rx.Observable.interval(1000);
-     * var clicksOrTimer = clicks.merge(timer);
-     * clicksOrTimer.subscribe(x => console.log(x));
-     *
-     * @example <caption>Merge together 3 Observables, but only 2 run concurrently</caption>
-     * var timer1 = Rx.Observable.interval(1000).take(10);
-     * var timer2 = Rx.Observable.interval(2000).take(6);
-     * var timer3 = Rx.Observable.interval(500).take(10);
-     * var concurrent = 2; // the argument
-     * var merged = timer1.merge(timer2, timer3, concurrent);
-     * merged.subscribe(x => console.log(x));
-     *
-     * @see {@link mergeAll}
-     * @see {@link mergeMap}
-     * @see {@link mergeMapTo}
-     * @see {@link mergeScan}
-     *
-     * @param {ObservableInput} other An input Observable to merge with the source
-     * Observable. More than one input Observables may be given as argument.
-     * @param {number} [concurrent=Number.POSITIVE_INFINITY] Maximum number of input
-     * Observables being subscribed to concurrently.
-     * @param {Scheduler} [scheduler=null] The IScheduler to use for managing
-     * concurrency of input Observables.
-     * @return {Observable} An Observable that emits items that are the result of
-     * every input Observable.
-     * @method merge
-     * @owner Observable
-     */
-    function merge() {
-        var observables = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            observables[_i] = arguments[_i];
-        }
-        return merge_1.merge.apply(void 0, observables)(this);
-    }
-    exports.merge = merge;
-});
-
-define('rxjs/observable/merge',["require", "exports", "../operator/merge"], function (require, exports, merge_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.merge = merge_1.mergeStatic;
-});
-
 define('rxjs/add/observable/merge',["require", "exports", "../../Observable", "../../observable/merge"], function (require, exports, Observable_1, merge_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -17355,9 +17335,10 @@ define('rxjs/add/operator/combineLatest',["require", "exports", "../../Observabl
     Observable_1.Observable.prototype.combineLatest = combineLatest_1.combineLatest;
 });
 
-define('rxjs/operator/concat',["require", "exports", "../operators/concat"], function (require, exports, concat_1) {
+define('rxjs/operator/concat',["require", "exports", "../operators/concat", "../observable/concat"], function (require, exports, concat_1, concat_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.concatStatic = concat_2.concat;
     /* tslint:enable:max-line-length */
     /**
      * Creates an output Observable which sequentially emits all values from every
@@ -19278,6 +19259,67 @@ define('rxjs/add/operator/max',["require", "exports", "../../Observable", "../..
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     Observable_1.Observable.prototype.max = max_1.max;
+});
+
+define('rxjs/operator/merge',["require", "exports", "../operators/merge", "../observable/merge"], function (require, exports, merge_1, merge_2) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.mergeStatic = merge_2.merge;
+    /* tslint:enable:max-line-length */
+    /**
+     * Creates an output Observable which concurrently emits all values from every
+     * given input Observable.
+     *
+     * <span class="informal">Flattens multiple Observables together by blending
+     * their values into one Observable.</span>
+     *
+     * <img src="./img/merge.png" width="100%">
+     *
+     * `merge` subscribes to each given input Observable (either the source or an
+     * Observable given as argument), and simply forwards (without doing any
+     * transformation) all the values from all the input Observables to the output
+     * Observable. The output Observable only completes once all input Observables
+     * have completed. Any error delivered by an input Observable will be immediately
+     * emitted on the output Observable.
+     *
+     * @example <caption>Merge together two Observables: 1s interval and clicks</caption>
+     * var clicks = Rx.Observable.fromEvent(document, 'click');
+     * var timer = Rx.Observable.interval(1000);
+     * var clicksOrTimer = clicks.merge(timer);
+     * clicksOrTimer.subscribe(x => console.log(x));
+     *
+     * @example <caption>Merge together 3 Observables, but only 2 run concurrently</caption>
+     * var timer1 = Rx.Observable.interval(1000).take(10);
+     * var timer2 = Rx.Observable.interval(2000).take(6);
+     * var timer3 = Rx.Observable.interval(500).take(10);
+     * var concurrent = 2; // the argument
+     * var merged = timer1.merge(timer2, timer3, concurrent);
+     * merged.subscribe(x => console.log(x));
+     *
+     * @see {@link mergeAll}
+     * @see {@link mergeMap}
+     * @see {@link mergeMapTo}
+     * @see {@link mergeScan}
+     *
+     * @param {ObservableInput} other An input Observable to merge with the source
+     * Observable. More than one input Observables may be given as argument.
+     * @param {number} [concurrent=Number.POSITIVE_INFINITY] Maximum number of input
+     * Observables being subscribed to concurrently.
+     * @param {Scheduler} [scheduler=null] The IScheduler to use for managing
+     * concurrency of input Observables.
+     * @return {Observable} An Observable that emits items that are the result of
+     * every input Observable.
+     * @method merge
+     * @owner Observable
+     */
+    function merge() {
+        var observables = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            observables[_i] = arguments[_i];
+        }
+        return merge_1.merge.apply(void 0, observables)(this);
+    }
+    exports.merge = merge;
 });
 
 define('rxjs/add/operator/merge',["require", "exports", "../../Observable", "../../operator/merge"], function (require, exports, Observable_1, merge_1) {

@@ -1,6 +1,6 @@
 {
   "name": "rxjs-amd-bundler",
-  "version": "1.0.0",
+  "version": "5.5.5",
   "description": "Utility to build RxJS amd bundel",
   "main": "gulpfile.js",
   "scripts": {
@@ -12,9 +12,9 @@
   },
   "author": "luboid",
   "license": "MIT",
-  "repository" : { 
-	"type" : "git", 
-	"url" : "https://github.com/luboid/rxjs-amd-bundler.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luboid/rxjs-amd-bundler.git"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
@@ -27,8 +27,8 @@
     "gulp-uglify": "^3.0.0",
     "merge2": "^1.2.0",
     "rimraf": "^2.6.2",
-    "rxjs": "^5.5.2",
-    "tslib": "^1.8.0",
-    "typescript": "^2.6.1"
+    "rxjs": "^5.5.5",
+    "tslib": "^1.8.1",
+    "typescript": "^2.6.2"
   }
 }
